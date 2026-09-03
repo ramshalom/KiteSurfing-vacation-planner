@@ -244,6 +244,7 @@ def render_form():
             date_range = st.date_input(
                 "Travel dates",
                 value=(date.today() + timedelta(days=60), date.today() + timedelta(days=67)),
+                min_value=date.today(),
             )
             departure_label = st.selectbox("Departure city", airport_options(), index=0)
         with col2:
@@ -423,6 +424,7 @@ def render_refine():
         new_dates = st.date_input(
             "Travel dates",
             value=(date.fromisoformat(inputs["start_date"]), date.fromisoformat(inputs["end_date"])),
+            min_value=date.today(),
         )
         new_rent_car = st.checkbox("Rent a car", value=True)
         if st.button("Regenerate for this destination"):
