@@ -1,0 +1,9 @@
+.env
+trips.db
+pdf_exports/
+__pycache__/
+.venv/
+
+# Large demo/media file - not source code, kept out of git to avoid
+# bloating the repo. Stays on your PC untouched.
+Demo - kite-surfer.pptx

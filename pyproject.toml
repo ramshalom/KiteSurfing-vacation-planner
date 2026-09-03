@@ -1,0 +1,14 @@
+[project]
+name = "kitesurf-vacation-crew"
+version = "0.1.0"
+description = "A multi-agent AI crew (manager + specialists) that plans a kitesurfing vacation, wrapped in a Streamlit web app."
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai[anthropic]>=0.80.0",
+    "crewai-tools>=0.17.0",
+    "streamlit>=1.38.0",
+    "python-dotenv>=1.0.1",
+    "requests>=2.31.0",
+    "reportlab>=4.2.0",
+    "pydantic>=2.7.0",
+]
