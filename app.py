@@ -182,19 +182,40 @@ def missing_keys():
 # New Plan tab
 # ---------------------------------------------------------------------------
 
-def region_multiselect():
-    """Anywhere is mutually exclusive with everything else."""
+def _region_select_on_change():
+    """
+    Cleans up the multiselect's OWN widget state (not just a separate
+    tracking variable) so the box itself visually reflects the rule -
+    picking any real region drops "Anywhere", and clearing everything
+    brings "Anywhere" back. Has to happen in an on_change callback: that
+    runs before the widget is redrawn, which is the only point Streamlit
+    allows a widget's own session_state key to be reassigned.
+    """
+    widget_key = "region_select_widget"
+    selected = st.session_state.get(widget_key, [])
     prev = st.session_state.get("region_select", ["Anywhere"])
-    selected = st.multiselect("Region preference", REGION_OPTIONS, default=prev, key="region_select_widget")
 
     if "Anywhere" in selected and len(selected) > 1:
-        if prev == ["Anywhere"]:
-            selected = [r for r in selected if r != "Anywhere"]
-        else:
-            selected = ["Anywhere"]
+        # "Anywhere" was already selected and the traveler added something
+        # else -> drop "Anywhere" and keep the new pick(s). Otherwise (they
+        # picked "Anywhere" while other regions were selected) -> "Anywhere"
+        # wins and clears the rest.
+        selected = [r for r in selected if r != "Anywhere"] if prev == ["Anywhere"] else ["Anywhere"]
     if not selected:
         selected = ["Anywhere"]
 
+    st.session_state[widget_key] = selected
+    st.session_state["region_select"] = selected
+
+
+def region_multiselect():
+    """Anywhere is mutually exclusive with everything else."""
+    if "region_select_widget" not in st.session_state:
+        st.session_state["region_select_widget"] = st.session_state.get("region_select", ["Anywhere"])
+    st.multiselect(
+        "Region preference", REGION_OPTIONS, key="region_select_widget", on_change=_region_select_on_change,
+    )
+    selected = st.session_state["region_select_widget"]
     st.session_state["region_select"] = selected
     return selected
 
