@@ -1,0 +1,9 @@
+.venv/
+.git/
+__pycache__/
+pdf_exports/
+trips.db
+.env
+Demo - kite-surfer.pptx
+*.md
+uv.lock
