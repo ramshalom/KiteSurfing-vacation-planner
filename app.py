@@ -117,12 +117,18 @@ def render_wind_heatmap_html(wind_heatmap: dict) -> str:
             return f"<tr><th style='padding:6px 10px;border:1px solid #ccc;background:#e0e0e0;'>{label}</th>{cells}</tr>"
 
         table = (
-            f"<table style='border-collapse:collapse;margin-bottom:14px;font-size:13px;'>"
+            # On a narrow (phone) screen this 11-column table is wider than
+            # the viewport - without its own overflow-x:auto wrapper, that
+            # would force the WHOLE PAGE to scroll sideways instead of just
+            # this table. Wrapping it keeps the scrolling contained here.
+            f"<div style='overflow-x:auto;margin-bottom:14px;'>"
+            f"<table style='border-collapse:collapse;font-size:13px;'>"
             f"<tr><th colspan='{len(hours)+1}' style='padding:6px;border:1px solid #ccc;background:#d0d0d0;'>{year}</th></tr>"
             f"<tr><th style='padding:6px 10px;border:1px solid #ccc;background:#e0e0e0;'>Time</th>{header_cells}</tr>"
             f"{row('Avg Min', avg_min)}"
             f"{row('Avg Max', avg_max)}"
             f"</table>"
+            f"</div>"
         )
         parts.append(table)
     return "".join(parts)
